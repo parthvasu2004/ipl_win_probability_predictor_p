@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPL Win Predictor</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin: 50px;
+        }
+        .row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .column {
+            flex: 1;
+            margin-right: 20px;
+        }
+        .column:last-child {
+            margin-right: 0;
+        }
+        label, select, input {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 5px;
+            font-size: 1em;
+            background-color: #333;
+            color: white;
+            border: 1px solid #555;
+            border-radius: 5px;
+        }
+        .btn {
+            background-color: darkorange;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            background-color: orangered;
+        }
+        .result {
+            background-color: darkorange;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>IPL Win Predictor</h1>
+        <form action="/predict" method="post">
+            <div class="row">
+                <div class="column">
+                    <label for="batting_team">Select the batting team:</label>
+                    <select name="batting_team" id="batting_team">
+                        {% for team in teams %}
+                            <option value="{{ team }}" {% if request.form.batting_team == team %} selected {% endif %}>{{ team }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="column">
+                    <label for="bowling_team">Select the bowling team:</label>
+                    <select name="bowling_team" id="bowling_team">
+                        {% for team in teams %}
+                            <option value="{{ team }}" {% if request.form.bowling_team == team %} selected {% endif %}>{{ team }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="column">
+                    <label for="city">Select host city:</label>
+                    <select name="city" id="city">
+                        {% for city in cities %}
+                            <option value="{{ city }}" {% if request.form.city == city %} selected {% endif %}>{{ city }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="column">
+                    <label for="target">Target:</label>
+                    <input type="number" name="target" id="target" value="{{ request.form.target }}">
+                </div>
+                <div class="column">
+                    <label for="score">Score:</label>
+                    <input type="number" name="score" id="score" value="{{ request.form.score }}">
+                </div>
+                <div class="column">
+                    <label for="overs">Overs completed:</label>
+                    <input type="number" name="overs" id="overs" step="0.1" value="{{ request.form.overs }}">
+                </div>
+                <div class="column">
+                    <label for="wickets">Wickets out:</label>
+                    <input type="number" name="wickets" id="wickets" value="{{ request.form.wickets }}">
+                </div>
+            </div>
+            <div class="row">
+                <button class="btn" type="submit">Predict Probability</button>
+            </div>
+        </form>
+        {% if show_result %}
+            <div class="result">
+                <h2>Prediction Results</h2>
+                <p>{{ batting_team }} - {{ win }}%</p>
+                <p>{{ bowling_team }} - {{ loss }}%</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
